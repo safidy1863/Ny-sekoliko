@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mobile/core/presentation/widgets/custom_button.dart';
-import 'package:mobile/core/utils/constants/app_color.dart';
+import 'package:go_router/go_router.dart';
+
+import '/core/presentation/widgets/custom_button.dart';
+import '/core/utils/constants/app_color.dart';
+import '/core/utils/constants/route_path.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -67,7 +70,9 @@ class LoginScreen extends StatelessWidget {
                   fontSize: 16.sp
                 ),
               ),
-              onPressed: () {})
+              onPressed: () {
+                context.push(RoutePath.identification);
+              })
         ],
       ),
     ));
