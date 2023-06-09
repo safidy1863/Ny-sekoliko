@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../utils/constants/route_path.dart';
 import '/features/login/presentation/login_screen.dart';
 import '/features/login/presentation/identification_screen.dart';
+import '/features/login/presentation/scan_screen.dart';
 
 class AppRouter {
   static GoRouter appRoutes = GoRouter(
@@ -15,6 +16,10 @@ class AppRouter {
       GoRoute(
         path: RoutePath.identification,
         builder: (context, state) => const IdentificationScreen(),
+      ),
+      GoRoute(
+        path: RoutePath.scan,
+        builder: (context, state) => const ScanScreen(),
       )
     ],
   );

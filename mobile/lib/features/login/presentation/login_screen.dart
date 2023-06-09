@@ -44,31 +44,31 @@ class LoginScreen extends StatelessWidget {
             height: 90.h,
           ),
           CustomButton(
-              isTransparent: true,
-              label: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.qr_code_2,
+            onPressed: () {
+              context.push(RoutePath.scan);
+            },
+            isTransparent: true,
+            label: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.qr_code_2,
+                  color: AppColor.greenPrimary,
+                ),
+                Text(
+                  "Scanner le QR Code",
+                  style: TextStyle(
+                    fontSize: 16.sp,
                     color: AppColor.greenPrimary,
                   ),
-                  Text(
-                    "Scanner le QR Code",
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      color: AppColor.greenPrimary,
-                    ),
-                  )
-                ],
-              ),
-              onPressed: () {}),
+                )
+              ],
+            ),
+          ),
           CustomButton(
               label: Text(
                 "S'identifier",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.sp
-                ),
+                style: TextStyle(color: Colors.white, fontSize: 16.sp),
               ),
               onPressed: () {
                 context.push(RoutePath.identification);
