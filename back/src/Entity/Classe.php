@@ -14,21 +14,23 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use phpDocumentor\Reflection\Types\Nullable;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ClasseRepository::class)]
 #[ApiResource(
     operations: [
         new Get(
-            security: "is_granted('ROLE_ADMIN') or object.delegues == user",
+            security: "is_granted('ROLE_DELEGUE')",
             securityMessage: "Seul l'administrateur et les délégués peuvent avoir accès à ces informations."
         ),
         new GetCollection(
-            security: "is_granted('ROLE_ADMIN') or object.delegues == user",
+            security: "is_granted('ROLE_DELEGUE')",
             securityMessage: "Seul l'administrateur et les délégués peuvent avoir accès à ces informations."
         ),
         new Post(
             security: "is_granted('ROLE_ADMIN')",
-            securityMessage: "Seul l'administrateur peut ajouter des classes."
+            securityMessage: "Seul l'administrateur peut ajouter des classes.",
+            validationContext: ['groups' => 'post_validation']
         ),
         new Delete(
             security: "is_granted('ROLE_ADMIN')",
@@ -44,7 +46,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ],
     denormalizationContext: [
         'groups' => ['classe_write']
-    ]
+    ],
+    collectDenormalizationErrors: true
 )]
 class Classe
 {
@@ -56,10 +59,12 @@ class Classe
 
     #[ORM\Column(length: 255)]
     #[Groups(['classe_read' , 'classe_write' , 'etudiant_read' , 'delegue_read' , 'cours_read'])]
+    #[Assert\NotBlank(message: 'Veuillez renseigner le parcours', groups: ['post_validation'])]
     private ?string $Parcours = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(['classe_read' , 'classe_write' , 'etudiant_read' , 'delegue_read' , 'cours_read'])]
+    #[Assert\NotBlank(message: 'Veuillez renseigner le niveau', groups: ['post_validation'])]
     private ?string $Niveau = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -114,7 +119,7 @@ class Classe
         return $this->Groupe;
     }
 
-    public function setGroupe(?string $Groupe): self
+    public function setGroupe(string $Groupe): self
     {
         $this->Groupe = $Groupe;
 

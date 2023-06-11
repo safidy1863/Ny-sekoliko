@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EtudiantRepository::class)]
 #[ApiResource(
@@ -29,7 +30,8 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
         ),
         new Post(
             security: "is_granted('ROLE_ADMIN')",
-            securityMessage: "Seul l'administrateur peut ajouter des étudiants."
+            securityMessage: "Seul l'administrateur peut ajouter des étudiants.",
+            validationContext: ['groups' => 'post_validation']
         ),
         new Delete(
             security: "is_granted('ROLE_ADMIN')",
@@ -45,7 +47,8 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     ],
     denormalizationContext: [
         "groups" => ["etudiant_write"]
-    ]
+    ],
+    collectDenormalizationErrors: true
 )]
 class Etudiant implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -57,6 +60,7 @@ class Etudiant implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 180, unique: true)]
     #[Groups(['etudiant_read' , "etudiant_write"])]
+    #[Assert\NotBlank(message: "Veuillez renseigner l'email", groups: ['post_validation'])]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -68,31 +72,40 @@ class Etudiant implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     #[Groups(['etudiant_write'])]
+    #[Assert\NotBlank(message: "Veuillez renseigner le mot de passe", groups: ['post_validation'])]
+    #[Assert\Length(min:6, minMessage:"Le mot de passe doit contenir au moins 6 caractères")]
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(['etudiant_read' , "etudiant_write" , "suivi_read" , 'classe_read'])]
+    #[Assert\NotBlank(message: "Veuillez renseigner le matricule", groups: ['post_validation'])]
+    #[Assert\Length(min:4, minMessage:"Le mot de passe doit contenir au moins 4 caractères")]
     private ?string $Matricule = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(['etudiant_read' , "etudiant_write" , "suivi_read" , 'classe_read'])]
+    #[Assert\NotBlank(message: "Veuillez renseigner le nom", groups: ['post_validation'])]
     private ?string $Nom = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(['etudiant_read' , "etudiant_write" , "suivi_read" , 'classe_read'])]
+    #[Assert\NotBlank(message: "Veuillez renseigner le prénom", groups: ['post_validation'])]
     private ?string $Prenom = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(['etudiant_read' , "etudiant_write"])]
+    #[Assert\NotBlank(message: "Veuillez renseigner l'adresse", groups: ['post_validation'])]
     private ?string $Adresse = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(['etudiant_read' , "etudiant_write"])]
+    #[Assert\NotBlank(message: "Veuillez renseigner le telephone", groups: ['post_validation'])]
     private ?string $Telephone = null;
 
     #[ORM\ManyToOne(inversedBy: 'Etudiants')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['etudiant_read' , "etudiant_write"])]
+    #[Assert\NotBlank(message: "Veuillez renseigner la classe", groups: ['post_validation'])]
     private ?Classe $Classe = null;
 
     #[ORM\OneToMany(mappedBy: 'Etudiants', targetEntity: Suivi::class, orphanRemoval: true)]

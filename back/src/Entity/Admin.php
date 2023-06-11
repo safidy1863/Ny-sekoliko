@@ -12,17 +12,22 @@ use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AdminRepository::class)]
 #[ApiResource(
     operations: [
-        new Post(processor: UserPasswordHasher::class),
+        new Post(
+            processor: UserPasswordHasher::class,
+            validationContext: ['groups' => 'post_validation']
+        ),
         new Delete(),
         new Patch(processor: UserPasswordHasher::class)
     ],
     denormalizationContext: [
-        'groups' => ['admin_write']
-    ]
+        'groups' => ['admin_write'],
+    ],
+    collectDenormalizationErrors: true
 )]
 class Admin implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -33,6 +38,7 @@ class Admin implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 180)]
     #[Groups(['admin_write'])]
+    #[Assert\NotBlank(message: "Veuillez renseigner l'email", groups: ['post_validation'])]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -43,6 +49,7 @@ class Admin implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     #[Groups(['admin_write'])]
+    #[Assert\NotBlank(message: "Veuillez renseigner le mot de passe", groups: ['post_validation'])]
     private ?string $password = null;
 
     public function getId(): ?int
@@ -78,8 +85,8 @@ class Admin implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        // guarantee every user at least has ROLE_ADMIN
+        $roles[] = 'ROLE_ADMIN';
 
         return array_unique($roles);
     }

@@ -5,30 +5,34 @@ namespace App\Entity;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use Doctrine\DBAL\Types\Types;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CoursRepository;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
 use Doctrine\Common\Collections\Collection;
+use App\Serializer\PatchedDateTimeNormalizer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\Context;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CoursRepository::class)]
 #[ApiResource(
     operations: [
         new Get(
-            security: "is_granted('ROLE_DELEGUE')",
+            security: "is_granted('ROLE_ETUDIANT')",
             securityMessage: "Il faut se connecter pour avoir accès à ces informations"
         ),
         new GetCollection(
-            security: "is_granted('ROLE_DELEGUE')",
+            security: "is_granted('ROLE_ETUDIANT')",
             securityMessage: "Il faut se connecter pour avoir accès à ces informations"
         ),
         new Post(
             security: "is_granted('ROLE_ADMIN')",
-            securityMessage: "Seul l'administrateur peut ajouter des cours."
+            securityMessage: "Seul l'administrateur peut ajouter des cours.",
+            validationContext: ['groups' => 'post_validation']
         ),
         new Delete(
             security: "is_granted('ROLE_ADMIN')",
@@ -44,7 +48,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ],
     denormalizationContext: [
         'groups' => ['cours_write']
-    ]
+    ],
+    collectDenormalizationErrors: true
 )]
 class Cours
 {
@@ -57,23 +62,31 @@ class Cours
     #[ORM\ManyToOne(inversedBy: 'cours')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['cours_read' , 'cours_write'])]
+    #[Assert\NotBlank(message: 'Veuillez renseigner la classe', groups: ['post_validation'])]
     private ?Classe $Classe = null;
 
     #[ORM\ManyToOne(inversedBy: 'cours')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['cours_read' , 'cours_write' , 'suivi_read' , 'classe_read'])]
+    #[Assert\NotBlank(message: 'Veuillez renseigner la matière', groups: ['post_validation'])]
     private ?Matiere $Matiere = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Groups(['cours_read' , 'cours_write' , 'suivi_read' , 'classe_read'])]
+    #[Context([PatchedDateTimeNormalizer::FORMAT_KEY => 'd-m-Y'])]
+    #[Assert\NotBlank(message: 'Veuillez renseigner la date', groups: ['post_validation'])]
     private ?\DateTimeInterface $Date = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
     #[Groups(['cours_read' , 'cours_write' , 'suivi_read' , 'classe_read'])]
+    #[Context([PatchedDateTimeNormalizer::FORMAT_KEY => 'H:i'])]
+    #[Assert\NotBlank(message: "Veuillez renseigner l'heure de debut", groups: ['post_validation'])]
     private ?\DateTimeInterface $HeureDebut = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
     #[Groups(['cours_read' , 'cours_write' , 'suivi_read' , 'classe_read'])]
+    #[Context([PatchedDateTimeNormalizer::FORMAT_KEY => 'H:i'])]
+    #[Assert\NotBlank(message: "Veuillez renseigner l'heure de fin", groups: ['post_validation'])]
     private ?\DateTimeInterface $HeureFin = null;
 
     #[ORM\OneToMany(mappedBy: 'Cours', targetEntity: Suivi::class, orphanRemoval: true)]

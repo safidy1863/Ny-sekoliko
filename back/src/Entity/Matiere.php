@@ -13,21 +13,23 @@ use ApiPlatform\Metadata\Patch;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MatiereRepository::class)]
 #[ApiResource(
     operations: [
         new Get(
-            security: "is_granted('ROLE_ADMIN')",
+            security: "is_granted('ROLE_ETUDIANT')",
             securityMessage: "Seul l'administrateur peut avoir accès à ces informations."
         ),
         new GetCollection(
-            security: "is_granted('ROLE_ADMIN')",
+            security: "is_granted('ROLE_ETUDIANT')",
             securityMessage: "Seul l'administrateur peut avoir accès à ces informations."
         ),
         new Post(
             security: "is_granted('ROLE_ADMIN')",
-            securityMessage: "Seul l'administrateur peut ajouter des matières."
+            securityMessage: "Seul l'administrateur peut ajouter des matières.",
+            validationContext: ['groups' => 'post_validation']
         ),
         new Delete(
             security: "is_granted('ROLE_ADMIN')",
@@ -43,7 +45,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ],
     denormalizationContext: [
         'groups' => ['matiere_write']
-    ]
+    ],
+    collectDenormalizationErrors: true
 )]
 class Matiere
 {
@@ -55,6 +58,7 @@ class Matiere
 
     #[ORM\Column(length: 255)]
     #[Groups(['matiere_read' , 'matiere_write' , 'cours_read'])]
+    #[Assert\NotBlank(message: "Veuillez renseigner la dénomination", groups: ['post_validation'])]
     private ?string $Denomination = null;
 
     #[ORM\OneToMany(mappedBy: 'Matiere', targetEntity: Cours::class, orphanRemoval: true)]
