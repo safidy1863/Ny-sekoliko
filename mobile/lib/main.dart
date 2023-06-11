@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import "package:flutter_screenutil/flutter_screenutil.dart";
+import 'package:mobile/app_theme.dart';
 import 'package:mobile/core/navigation/app_router.dart';
 
 void main() {
@@ -14,6 +15,7 @@ class NySekoliko extends StatelessWidget {
     return ScreenUtilInit(
       builder: (context, child) => MaterialApp.router(
         title: 'Ny Sekoliko',
+        theme: AppTheme.customTheme(),
         debugShowCheckedModeBanner: false,
         routerConfig: AppRouter.appRoutes,
       ),
