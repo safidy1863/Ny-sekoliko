@@ -10,7 +10,10 @@ class CustomTextField extends StatelessWidget {
     this.validator,
     this.controller,
     this.suffixIcon,
+    this.prefixIcon,
     this.textInputType = TextInputType.text,
+    this.onChanged,
+    this.isDense = false,
   });
 
   final String hintText;
@@ -19,12 +22,16 @@ class CustomTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final TextInputType textInputType;
   final Widget? suffixIcon;
+  final Widget? prefixIcon;
+  final Function(String)? onChanged;
+  final bool isDense;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5),
       child: TextFormField(
+        onChanged: onChanged,
         controller: controller,
         obscureText: isPassword,
         validator: validator,
@@ -52,6 +59,12 @@ class CustomTextField extends StatelessWidget {
           contentPadding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 15),
           hintStyle: Theme.of(context).textTheme.bodySmall,
           suffixIcon: suffixIcon,
+          prefixIcon: prefixIcon,
+          prefixIconConstraints: const BoxConstraints(
+            maxHeight: 20,
+            minWidth: 30,
+          ),
+          isDense: isDense
         ),
       ),
     );

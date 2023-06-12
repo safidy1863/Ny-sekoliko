@@ -1,37 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mobile/core/presentation/widgets/custom_textfield.dart';
 import 'package:mobile/features/lists/presentation/widgets/student_item.dart';
 import '/core/utils/constants/app_color.dart';
 
-class ListsScreen extends StatelessWidget {
+class ListsScreen extends StatefulWidget {
   const ListsScreen({Key? key}) : super(key: key);
 
   @override
+  State<ListsScreen> createState() => _ListsScreenState();
+}
+
+class _ListsScreenState extends State<ListsScreen> {
+
+  late TextEditingController searchInput;
+
+  @override
+  void initState() {
+    searchInput = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    searchInput.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.transparent,
-        leading: const Icon(
-          Icons.chevron_left,
-          color: Colors.black,
+        leading: IconButton(
+          onPressed: () {
+            context.pop();
+          },
+          icon: const Icon(
+            Icons.chevron_left,
+            color: Colors.black,
+            size: 18,
+          ),
         ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               "Liste d'appel",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Colors.black,
+                  ),
             ),
             Text(
               "Intéraction homme machine",
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 14.sp,
-              ),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Colors.grey,
+                  ),
             ),
           ],
         ),
@@ -40,7 +67,9 @@ class ListsScreen extends StatelessWidget {
               onPressed: () {},
               child: Text(
                 "Términer",
-                style: TextStyle(color: AppColor.greenPrimary, fontSize: 14.sp),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppColor.greenPrimary,
+                    ),
               ))
         ],
       ),
@@ -56,14 +85,16 @@ class ListsScreen extends StatelessWidget {
                     Icon(
                       Icons.date_range,
                       color: Colors.grey,
-                      size: 16.sp,
+                      size: 14.sp,
                     ),
                     const SizedBox(
                       width: 3,
                     ),
                     Text(
                       "Date : 06/06/2023",
-                      style: TextStyle(color: Colors.grey, fontSize: 16.sp),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.grey,
+                          ),
                     )
                   ],
                 ),
@@ -75,30 +106,45 @@ class ListsScreen extends StatelessWidget {
                     Icon(
                       Icons.grade,
                       color: Colors.grey,
-                      size: 16.sp,
+                      size: 14.sp,
                     ),
                     const SizedBox(
                       width: 3,
                     ),
                     Text(
                       "Niveau L1",
-                      style: TextStyle(color: Colors.grey, fontSize: 16.sp),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.grey,
+                          ),
                     )
                   ],
                 )
               ],
             ),
-            // TODO : Search textField
             const SizedBox(
-              height: 15,
+              height: 5,
             ),
-            Row(
+             CustomTextField(
+                hintText: "Recherche",
+                isDense: true,
+                controller: searchInput,
+                onChanged: (String value) {
+                  print(value);
+                },
+                prefixIcon: const Icon(
+                  Icons.search_outlined,
+                  color: Colors.grey,
+                )),
+            const SizedBox(
+              height: 5,
+            ),
+            Wrap(
               children: [
                 Row(
                   children: [
                     Container(
-                      width: 10,
-                      height: 10,
+                      width: 10.sp,
+                      height: 10.sp,
                       decoration: const BoxDecoration(
                           color: AppColor.greenPrimary, shape: BoxShape.circle),
                     ),
@@ -107,7 +153,9 @@ class ListsScreen extends StatelessWidget {
                     ),
                     Text(
                       "80 étudiants présent(e)s",
-                      style: TextStyle(color: Colors.grey, fontSize: 16.sp),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.grey,
+                          ),
                     ),
                   ],
                 ),
@@ -117,17 +165,20 @@ class ListsScreen extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      width: 10,
-                      height: 10,
-                      decoration: const BoxDecoration(
-                          color: AppColor.redPrimary, shape: BoxShape.circle),
+                      width: 10.sp,
+                      height: 10.sp,
+                      decoration: BoxDecoration(
+                          color: AppColor.redPrimary.withOpacity(0.6),
+                          shape: BoxShape.circle),
                     ),
                     const SizedBox(
                       width: 3,
                     ),
                     Text(
                       "80 étudiants absent(e)s",
-                      style: TextStyle(color: Colors.grey, fontSize: 16.sp),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.grey,
+                          ),
                     ),
                   ],
                 )
@@ -137,22 +188,48 @@ class ListsScreen extends StatelessWidget {
               height: 10,
             ),
             Row(
-              children: const [
-                Text("N°"),
-                SizedBox(
+              children: [
+                Text(
+                  "N°",
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.black,
+                      ),
+                ),
+                const SizedBox(
                   width: 5,
                 ),
                 SizedBox(
                   width: 50,
-                  child: Text("Matr"),
+                  child: Text(
+                    "Matr",
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Colors.black,
+                        ),
+                  ),
                 ),
-                Expanded(child: Text("Nom et prénoms")),
-                Text("Prés"),
-                SizedBox(
+                Expanded(
+                    child: Text(
+                  "Nom et prénoms",
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.black,
+                      ),
+                )),
+                Text(
+                  "Prés",
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.black,
+                      ),
+                ),
+                const SizedBox(
                   width: 10,
                 ),
-                Text("Abs"),
-                SizedBox(
+                Text(
+                  "Abs",
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.black,
+                      ),
+                ),
+                const SizedBox(
                   width: 10,
                 )
               ],

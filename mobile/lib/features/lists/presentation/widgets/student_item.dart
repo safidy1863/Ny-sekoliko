@@ -28,18 +28,21 @@ class _StudentItemState extends State<StudentItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 5),
+      margin: const EdgeInsets.only(bottom: 5),
       child: Row(
         children: [
           Text(
             widget.number.toString(),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Colors.black,
+            ),
           ),
           const SizedBox(
             width: 5,
           ),
           Expanded(
             child: Container(
-              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
               decoration: BoxDecoration(
                 color: AppColor.grayPrimary,
                 borderRadius: BorderRadius.circular(5.r)
@@ -48,26 +51,30 @@ class _StudentItemState extends State<StudentItem> {
                 children: [
                   SizedBox(
                     width: 50,
-                    child: Text(widget.matriculate),
+                    child: Text(widget.matriculate,style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Colors.black,
+                    ),),
                   ),
                   Expanded(
-                    child: Text(widget.name),
+                    child: Text(widget.name,style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Colors.black,
+                    ),),
                   ),
                   GFCheckbox(
                     onChanged: (value) {},
                     value: present,
-                    size: 20.sp,
+                    size: 18.sp,
                     activeBgColor: AppColor.greenPrimary,
                     activeBorderColor: Colors.transparent,
-                    activeIcon: Icon(Icons.check, color: Colors.white,size: 16.sp,),
+                    activeIcon: Icon(Icons.check, color: Colors.white,size: 14.sp,),
                   ),
                   GFCheckbox(
                     onChanged: (value) {},
                     value: present,
-                    size: 20.sp,
-                    activeBgColor: AppColor.redPrimary,
+                    size: 18.sp,
+                    activeBgColor: AppColor.redPrimary.withOpacity(0.7),
                     activeBorderColor: Colors.transparent,
-                    activeIcon: Icon(Icons.close, color: Colors.white,size: 16.sp,),
+                    activeIcon: Icon(Icons.close, color: Colors.white,size: 14.sp,),
                   ),
                 ],
               ),

@@ -11,6 +11,9 @@ class HomeScreen extends StatelessWidget {
   List<String> seances = [
     "Interaction Homme- machine",
     "Algorithme",
+    "Oracle database",
+    "Interaction Homme- machine",
+    "Algorithme",
     "Oracle database"
   ];
 
@@ -22,13 +25,16 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         iconTheme: IconThemeData(color: Colors.grey, size: 30.sp),
         actions: [
-          GFAvatar(
-            backgroundImage: const AssetImage(
-              "assets/images/user.jpg",
+          Padding(
+            padding: const EdgeInsets.all(5),
+            child: GFAvatar(
+              backgroundImage: const AssetImage(
+                "assets/images/user.jpg",
+              ),
+              shape: GFAvatarShape.square,
+              borderRadius: BorderRadius.circular(8.r),
+              size: GFSize.SMALL,
             ),
-            shape: GFAvatarShape.square,
-            borderRadius: BorderRadius.circular(8.r),
-            size: GFSize.SMALL,
           )
         ],
       ),
@@ -43,43 +49,45 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Text(
                   "Bonjour délégué Mialy R.",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16.sp,
-                  ),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Colors.black
+                  )
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.calendar_today,
                       color: Colors.grey,
-                      size: 16.sp,
+                      size: 14,
                     ),
                     const SizedBox(width: 5),
                     Text(
                       "Date : 06/06/2023",
-                      style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.grey,
+                        )
                     ),
                   ],
                 )
               ],
             ),
             const SizedBox(
-              height: 20,
+              height: 15,
             ),
             Text(
               "Séances",
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 16.sp,
-              ),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600
+                )
             ),
             Expanded(
               child: ListView.builder(
+                padding: const EdgeInsets.only(bottom: 10),
                 itemCount: seances.length,
                 itemBuilder: (context, index) {
-                  return SessionItem(session: seances[index], teacher: "Avec Mr William", period: "09h00 - 10h30",isCurrentSession: index == 1,);
+                  return SessionItem(session: seances[index], teacher: "avec Mr William", period: "09h00 - 10h30",isCurrentSession: index == 1,);
                 },
               ),
             )
