@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use Doctrine\DBAL\Types\Types;
@@ -51,6 +53,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     ],
     collectDenormalizationErrors: true
 )]
+#[ApiFilter(SearchFilter::class, properties: ['Classe.Niveau' => 'exact', 'Classe.Parcours' => 'exact', 'Classe.Groupe' => 'exact'])]
 class Cours
 {
     #[ORM\Id]
@@ -90,6 +93,7 @@ class Cours
     private ?\DateTimeInterface $HeureFin = null;
 
     #[ORM\OneToMany(mappedBy: 'Cours', targetEntity: Suivi::class, orphanRemoval: true)]
+    #[Groups(['cours_read'])]
     private Collection $suivis;
 
     public function __construct()

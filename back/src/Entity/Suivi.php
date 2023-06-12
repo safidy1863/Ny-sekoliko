@@ -61,13 +61,13 @@ class Suivi
     private ?Cours $Cours = null;
 
     #[ORM\Column]
-    #[Groups(['suivi_read' , 'suivi_write'])]
+    #[Groups(['suivi_read' , 'suivi_write' , 'cours_read'])]
     #[Assert\NotBlank(message: "Veuillez renseigner si l'étuiant est absent", groups: ['post_validation'])]
     private ?bool $Absent = null;
 
     #[ORM\ManyToOne(inversedBy: 'suivis')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['suivi_read' , 'suivi_write'])]
+    #[Groups(['suivi_read' , 'suivi_write' , 'cours_read'])]
     #[Assert\NotBlank(message: "Veuillez renseigner l'étudiant", groups: ['post_validation'])]
     private ?Etudiant $Etudiants = null;
 

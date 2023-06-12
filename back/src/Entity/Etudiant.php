@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Patch;
@@ -16,6 +19,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\State\UserPasswordHasher;
 
 #[ORM\Entity(repositoryClass: EtudiantRepository::class)]
 #[ApiResource(
@@ -29,6 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             securityMessage: "Seul l'administrateur et les délégués peuvent avoir accès à ces informations."
         ),
         new Post(
+            processor: UserPasswordHasher::class,
             security: "is_granted('ROLE_ADMIN')",
             securityMessage: "Seul l'administrateur peut ajouter des étudiants.",
             validationContext: ['groups' => 'post_validation']
@@ -38,6 +43,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             securityMessage: "Seul l'administrateur peut supprimer des étudiants."
         ),
         new Patch(
+            processor: UserPasswordHasher::class,
             security: "is_granted('ROLE_ADMIN')",
             securityMessage: "Seul l'administrateur peut modifier des étudiants."
         )
@@ -50,6 +56,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     ],
     collectDenormalizationErrors: true
 )]
+#[ApiFilter(SearchFilter::class, properties: ['Matricule' => 'exact', 'Nom' => 'start', 'Prenom' => 'start'])]
+#[ApiFilter(OrderFilter::class, properties: ['Matricule' => 'ASC'])]
 class Etudiant implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -77,18 +85,18 @@ class Etudiant implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['etudiant_read' , "etudiant_write" , "suivi_read" , 'classe_read'])]
+    #[Groups(['etudiant_read' , "etudiant_write" , "suivi_read" , 'classe_read' , 'cours_read'])]
     #[Assert\NotBlank(message: "Veuillez renseigner le matricule", groups: ['post_validation'])]
     #[Assert\Length(min:4, minMessage:"Le mot de passe doit contenir au moins 4 caractères")]
     private ?string $Matricule = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['etudiant_read' , "etudiant_write" , "suivi_read" , 'classe_read'])]
+    #[Groups(['etudiant_read' , "etudiant_write" , "suivi_read" , 'classe_read' , 'cours_read'])]
     #[Assert\NotBlank(message: "Veuillez renseigner le nom", groups: ['post_validation'])]
     private ?string $Nom = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['etudiant_read' , "etudiant_write" , "suivi_read" , 'classe_read'])]
+    #[Groups(['etudiant_read' , "etudiant_write" , "suivi_read" , 'classe_read' , 'cours_read'])]
     #[Assert\NotBlank(message: "Veuillez renseigner le prénom", groups: ['post_validation'])]
     private ?string $Prenom = null;
 
@@ -98,7 +106,7 @@ class Etudiant implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $Adresse = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['etudiant_read' , "etudiant_write"])]
+    #[Groups(['etudiant_read' , "etudiant_write" , 'cours_read'])]
     #[Assert\NotBlank(message: "Veuillez renseigner le telephone", groups: ['post_validation'])]
     private ?string $Telephone = null;
 
@@ -114,6 +122,31 @@ class Etudiant implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->suivis = new ArrayCollection();
+    }
+
+    #[Groups(['etudiant_read'])]
+    public function getPrésence():int {
+        return array_reduce($this->suivis->toArray(),function($total, $suivis){
+            if($suivis->isAbsent() === true){
+                return $total + 1;
+            }
+            return $total;
+        }, 0);
+    }
+
+    #[Groups(['etudiant_read'])]
+    public function getAbscence(){
+        return array_reduce($this->suivis->toArray(),function($total, $suivis){
+            if($suivis->isAbsent() === false){
+                return $total + 1;
+            }
+            return $total;
+        }, 0);
+    }
+
+    #[Groups(['etudiant_read'])]
+    public function getNomComplet(){
+        return $this->Nom . $this->Prenom;
     }
 
     public function getId(): ?int
