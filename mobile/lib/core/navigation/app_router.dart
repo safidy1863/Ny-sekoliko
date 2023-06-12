@@ -9,7 +9,7 @@ import '/features/lists/presentation/lists_screen.dart';
 
 class AppRouter {
   static GoRouter appRoutes = GoRouter(
-    initialLocation: RoutePath.login,
+    initialLocation: RoutePath.home,
     routes: [
       GoRoute(
         path: RoutePath.login,
