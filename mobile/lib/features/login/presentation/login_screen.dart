@@ -31,14 +31,16 @@ class LoginScreen extends StatelessWidget {
           ),
           Text(
             "Bienvenue sur",
-            style: TextStyle(fontSize: 16.sp, color: AppColor.greenPrimary),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: AppColor.greenPrimary,
+            ),
           ),
           Text(
             "Ny Sekoliko",
-            style: TextStyle(
-                fontSize: 36.sp,
-                fontWeight: FontWeight.w600,
-                color: AppColor.greenPrimary),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: AppColor.greenPrimary,
+              fontSize: 30.0
+            ),
           ),
           SizedBox(
             height: 90.h,
@@ -57,8 +59,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 Text(
                   "Scanner le QR Code",
-                  style: TextStyle(
-                    fontSize: 16.sp,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: AppColor.greenPrimary,
                   ),
                 )
@@ -68,7 +69,9 @@ class LoginScreen extends StatelessWidget {
           CustomButton(
               label: Text(
                 "S'identifier",
-                style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Colors.white,
+                ),
               ),
               onPressed: () {
                 context.push(RoutePath.identification);

@@ -1,14 +1,29 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import '/core/utils/constants/app_color.dart';
 
-class ScanScreen extends StatelessWidget {
+class ScanScreen extends StatefulWidget {
   const ScanScreen({Key? key}) : super(key: key);
 
   @override
+  State<ScanScreen> createState() => _ScanScreenState();
+}
+
+class _ScanScreenState extends State<ScanScreen> {
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  Barcode? result ;
+  QRViewController? controller ;
+
+
+  @override
   Widget build(BuildContext context) {
-    final double top = MediaQuery.of(context).size.height - 200.h;
     return Scaffold(
       body: Container(
         child: Stack(
@@ -33,17 +48,22 @@ class ScanScreen extends StatelessWidget {
             Positioned(
               top: 30,
               left: 10.w,
-              child: Container(
-                width: 25,
-                height: 25,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(5.r)),
-                child: Center(
-                    child: Icon(
-                  Icons.chevron_left,
-                  size: 20,
-                )),
+              child: GestureDetector(
+                onTap: () {
+                  context.pop();
+                },
+                child: Container(
+                  width: 25,
+                  height: 25,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(5.r)),
+                  child: const Center(
+                      child: Icon(
+                    Icons.chevron_left,
+                    size: 20,
+                  )),
+                ),
               ),
             ),
             // Camera
@@ -66,6 +86,7 @@ class ScanScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.r),
                           color: Colors.white,
                         ),
+
                       ),
                     )
                   ],
@@ -94,8 +115,7 @@ class ScanScreen extends StatelessWidget {
                   ),
                   Text(
                     "Scannez ici pour vous connectez",
-                    style:
-                        TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
+                    style: Theme.of(context).textTheme.bodyLarge,
                   )
                 ],
               ),
@@ -104,5 +124,27 @@ class ScanScreen extends StatelessWidget {
         ),
       ),
     );
+
+  }
+
+  void _onQRViewCreated(QRViewController controller) {
+    this.controller = controller;
+    controller.resumeCamera();
+    log("Hello");
+    controller.scannedDataStream.listen((scanData) {
+      log(scanData.code.toString());
+      HapticFeedback.vibrate();
+      setState(() {
+        result = scanData;
+      });
+    });
+    this.controller!.pauseCamera();
+    this.controller!.resumeCamera();
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
   }
 }
