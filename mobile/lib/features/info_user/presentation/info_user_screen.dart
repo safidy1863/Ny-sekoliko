@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile/core/presentation/widgets/custom_app_bar_simple.dart';
 import 'package:mobile/core/presentation/widgets/custom_button.dart';
 import 'package:mobile/core/utils/constants/app_color.dart';
 import 'package:mobile/features/info_user/presentation/widgets/info_textField.dart';
@@ -11,31 +12,9 @@ class InfoUserScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        leading: IconButton(
-          onPressed: () {
-            context.pop();
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-            size: 16,
-          ),
-        ),
-        leadingWidth: 10,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: Text(
-            "Votre profile",
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w700,
-                ),
-          ),
-        ),
-        backgroundColor: Colors.white,
-      ),
+      appBar: CustomAppBarSimple(title: "Votre profile",leadingPressed: () {
+        context.pop();
+      }),
       body: Container(
         color: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
