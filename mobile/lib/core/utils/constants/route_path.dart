@@ -6,4 +6,5 @@ abstract class RoutePath {
   static const String lists = "/lists";
   static const String infoUser = "/info_user";
   static const String about = "/about";
+  static const String student = "/student";
 }

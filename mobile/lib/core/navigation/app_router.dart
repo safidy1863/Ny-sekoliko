@@ -8,10 +8,11 @@ import '/features/home/presentation/home_screen.dart';
 import '/features/lists/presentation/lists_screen.dart';
 import '/features/info_user/presentation/info_user_screen.dart';
 import '/features/about/presentation/about_screen.dart';
+import '/features/student/presentation/student_screen.dart';
 
 class AppRouter {
   static GoRouter appRoutes = GoRouter(
-    initialLocation: RoutePath.home,
+    initialLocation: RoutePath.student,
     routes: [
       GoRoute(
         path: RoutePath.login,
@@ -39,6 +40,10 @@ class AppRouter {
       GoRoute(
         path: RoutePath.about,
         builder: (context, state) => const AboutScreen(),
+      ),
+      GoRoute(
+        path: RoutePath.student,
+        builder: (context, state) => const StudentScreen(),
       ),
     ],
   );
