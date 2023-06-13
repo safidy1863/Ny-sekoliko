@@ -6,6 +6,8 @@ import '/features/login/presentation/identification_screen.dart';
 import '/features/login/presentation/scan_screen.dart';
 import '/features/home/presentation/home_screen.dart';
 import '/features/lists/presentation/lists_screen.dart';
+import '/features/info_user/presentation/info_user_screen.dart';
+import '/features/about/presentation/about_screen.dart';
 
 class AppRouter {
   static GoRouter appRoutes = GoRouter(
@@ -28,9 +30,16 @@ class AppRouter {
         builder: (context, state) => HomeScreen(),
       ),
       GoRoute(
-        path: RoutePath.lists,
-        builder: (context, state) => const ListsScreen()
-      )
+          path: RoutePath.lists,
+          builder: (context, state) => const ListsScreen()),
+      GoRoute(
+        path: RoutePath.infoUser,
+        builder: (context, state) => const InfoUserScreen(),
+      ),
+      GoRoute(
+        path: RoutePath.about,
+        builder: (context, state) => const AboutScreen(),
+      ),
     ],
   );
 }

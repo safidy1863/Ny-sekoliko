@@ -3,7 +3,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:getwidget/components/drawer/gf_drawer.dart';
-import 'package:mobile/core/utils/constants/app_color.dart';
+import 'package:go_router/go_router.dart';
+import '../../utils/constants/app_color.dart';
+import '../../utils/constants/route_path.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({Key? key}) : super(key: key);
@@ -41,9 +43,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         const SizedBox(
                           height: 20,
                         ),
-                        _menuItem(context, Icons.home_filled, 0, "Accueil"),
-                        _menuItem(context, Icons.person, 1, "Profil"),
-                        _menuItem(context, Icons.info_sharp, 2, "A propos"),
+                        _menuItem(context, Icons.home_filled, 0, "Accueil", RoutePath.home),
+                        _menuItem(context, Icons.person, 1, "Profil",RoutePath.infoUser),
+                        _menuItem(context, Icons.info_sharp, 2, "A propos", RoutePath.about),
                       ],
                     ),
                   ),
@@ -81,12 +83,13 @@ class _CustomDrawerState extends State<CustomDrawer> {
   }
 
   Widget _menuItem(
-      BuildContext context, IconData icon, int numberMenu, String label) {
+      BuildContext context, IconData icon, int numberMenu, String label,String routePath) {
     return GestureDetector(
       onTap: () {
         setState(() {
           currentMenu = numberMenu;
         });
+        context.push(routePath);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
