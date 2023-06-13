@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mobile/features/student/presentation/widgets/session_edt_item.dart';
+import '/core/presentation/widgets/session_item.dart';
+import '/core/utils/constants/app_color.dart';
 import '/core/presentation/widgets/custom_app_bar_with_image.dart';
 import '/core/presentation/widgets/custom_drawer.dart';
+
+part 'widgets/header_table.dart';
+part 'widgets/content_table.dart';
 
 class StudentScreen extends StatefulWidget {
   const StudentScreen({Key? key}) : super(key: key);
@@ -27,6 +34,7 @@ class _StudentScreenState extends State<StudentScreen>
 
   @override
   Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: const CustomAppBarWithImage(
         currentUser: AssetImage(
@@ -34,11 +42,13 @@ class _StudentScreenState extends State<StudentScreen>
         ),
       ),
       drawer: const CustomDrawer(),
-      body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-          children: [
-            Column(
+      body: SizedBox(
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("Bonjour délégué Mialy R.",
@@ -57,29 +67,27 @@ class _StudentScreenState extends State<StudentScreen>
                     const SizedBox(width: 5),
                     Text("Date : 06/06/2023",
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey,
-                        )),
+                              color: Colors.grey,
+                            )),
                   ],
                 )
               ],
             ),
-            const SizedBox(
-              height: 15,
-            ),
-            TabBar(controller: _tabController, tabs: const [
-              Tab(
-                text: "Aujourd'hui",
-              ),
-              Tab(
-                text: "Cette semaine",
-              )
-            ],
-              labelStyle: Theme.of(context).textTheme.bodySmall,
-              labelColor: Colors.black,
-            )
-          ],
-        ),
-      ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          SizedBox(
+            width: width * 0.55,
+            child: HeaderTable(tabController: _tabController),
+          ),
+          Expanded(
+            child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: ContentTable(tabController: _tabController)),
+          ),
+        ],
+      )),
     );
   }
 }

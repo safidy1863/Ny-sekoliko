@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:mobile/core/presentation/widgets/custom_app_bar_with_image.dart';
-import 'package:mobile/features/home/presentation/widgets/session_item.dart';
+import 'package:mobile/core/presentation/widgets/session_item.dart';
 import '../../../core/presentation/widgets/custom_drawer.dart';
 
 class HomeScreen extends StatelessWidget {
