@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mobile/core/presentation/widgets/custom_button.dart';
-import 'package:mobile/core/utils/constants/app_color.dart';
+import 'package:go_router/go_router.dart';
+
+import '/core/presentation/widgets/custom_button.dart';
+import '/core/utils/constants/app_color.dart';
+import '/core/utils/constants/route_path.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -28,46 +31,51 @@ class LoginScreen extends StatelessWidget {
           ),
           Text(
             "Bienvenue sur",
-            style: TextStyle(fontSize: 16.sp, color: AppColor.greenPrimary),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: AppColor.greenPrimary,
+            ),
           ),
           Text(
             "Ny Sekoliko",
-            style: TextStyle(
-                fontSize: 36.sp,
-                fontWeight: FontWeight.w600,
-                color: AppColor.greenPrimary),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: AppColor.greenPrimary,
+              fontSize: 30.0
+            ),
           ),
           SizedBox(
             height: 90.h,
           ),
           CustomButton(
-              isTransparent: true,
-              label: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.qr_code_2,
+            onPressed: () {
+              context.push(RoutePath.scan);
+            },
+            isTransparent: true,
+            label: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.qr_code_2,
+                  color: AppColor.greenPrimary,
+                ),
+                Text(
+                  "Scanner le QR Code",
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: AppColor.greenPrimary,
                   ),
-                  Text(
-                    "Scanner le QR Code",
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      color: AppColor.greenPrimary,
-                    ),
-                  )
-                ],
-              ),
-              onPressed: () {}),
+                )
+              ],
+            ),
+          ),
           CustomButton(
               label: Text(
                 "S'identifier",
-                style: TextStyle(
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Colors.white,
-                  fontSize: 16.sp
                 ),
               ),
-              onPressed: () {})
+              onPressed: () {
+                context.push(RoutePath.identification);
+              })
         ],
       ),
     ));

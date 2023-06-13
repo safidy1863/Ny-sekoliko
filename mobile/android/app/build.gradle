@@ -42,12 +42,16 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
+    dependencies {
+        implementation 'com.android.support:multidex:1.0.3'
+    }
+
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.eni.nysekoliko.mobile"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 20
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
